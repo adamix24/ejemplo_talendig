@@ -1,50 +1,51 @@
-<html>
-  <head>
-      <title>Agenda Final</title>
+<?php $titulo = 'Agenda · Datos del contacto'; include 'partes/cabecera.php'; ?>
 
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  </head>
+    <div class="container my-4">
 
-  <body>
-    <div class="container mt-3">
-
-        <h3>Agenda del Futuro</h3>
-
-        <h4>Datos del contacto</h4>
-        <div class="text-end" id="divBorrar">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 class="page-title h3">Datos del contacto</h1>
+            <p class="page-subtitle">Completa la información de la persona</p>
+          </div>
+          <div id="divBorrar"></div>
         </div>
 
-        <form method="post" action="guardar.php" class="col-md-6">
+        <div class="app-card" style="max-width:640px;">
+          <form method="post" action="guardar.php">
 
-          <input type="text" name="codigo" value="<?= (isset($_GET['id']))?$_GET['id']:''; ?>"/>
-          <div class="input-group mb-3"><label class="input-group-text">Nombre: </label> <input required class="form-control" type="text" name="nombre"/> </div>
-          <div class="input-group mb-3"><label class="input-group-text">Apellido: </label> <input class="form-control" type="text" name="apellido"/> </div>
-          <div class="input-group mb-3"><label class="input-group-text">Telefono: </label> <input class="form-control" type="text" name="telefono"/> </div>
-          <div class="input-group mb-3"><label class="input-group-text">T Sangre: </label>
-                <select class="form-control" name="tsangre">
-                  <option></option>
-                  <option>A+</option>
-                  <option>A-</option>
-                  <option>B+</option>
-                  <option>B-</option>
-                  <option>O+</option>
-                  <option>O-</option>
-                </select>
-           </div>
-          <div class="input-group mb-3"><label class="input-group-text">Cedula: </label> <input class="form-control" maxlength="12" type="text" name="cedula"/> </div>
-          <div class="input-group mb-3"><label class="input-group-text">F Nacimiento: </label> <input class="form-control" type="date" name="fnacimiento"/> </div>
+            <input type="hidden" name="codigo" value="<?= (isset($_GET['id']))?$_GET['id']:''; ?>"/>
 
-          <div class="text-center">
-              <a onclick="return confirm('Seguro?')" style="margin-right:80px;"  class="btn btn-warning " href="./">Cancelar</a>
+            <div class="input-group mb-3"><label class="input-group-text">Nombre</label> <input required class="form-control" type="text" name="nombre"/> </div>
+            <div class="input-group mb-3"><label class="input-group-text">Apellido</label> <input class="form-control" type="text" name="apellido"/> </div>
+            <div class="input-group mb-3"><label class="input-group-text">Teléfono</label> <input class="form-control" type="text" name="telefono"/> </div>
+            <div class="input-group mb-3"><label class="input-group-text">T. Sangre</label>
+                  <select class="form-select" name="tsangre">
+                    <option></option>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                  </select>
+             </div>
+            <div class="input-group mb-3"><label class="input-group-text">Cédula</label> <input class="form-control" maxlength="12" type="text" name="cedula"/> </div>
+            <div class="input-group mb-4"><label class="input-group-text">F. Nacimiento</label> <input class="form-control" type="date" name="fnacimiento"/> </div>
 
-              <button class="btn btn-success">Guardar</button>
-          </div>
+            <div class="d-flex justify-content-between">
+                <a onclick="return confirm('Seguro?')" class="btn btn-outline-secondary" href="./">
+                  <i class="fa fa-xmark me-1"></i> Cancelar
+                </a>
+                <button class="btn btn-success btn-lg-soft">
+                  <i class="fa fa-floppy-disk me-1"></i> Guardar
+                </button>
+            </div>
 
-        </form>
-
+          </form>
+        </div>
 
     </div>
+
     <script>
         function aplicarValor(campo, valor){
 
@@ -88,7 +89,7 @@
 
             <script>
 
-              document.getElementById('divBorrar').innerHTML = '<a onclick="return confirm(\'Seguro que quiere borrar\');" href="delete.php?id=$archivo" class="btn btn-danger"><i class="fa fa-trash"></i></a>';
+              document.getElementById('divBorrar').innerHTML = '<a onclick="return confirm(\'Seguro que quiere borrar\');" href="delete.php?id=$archivo" class="btn btn-danger btn-lg-soft"><i class="fa fa-trash me-1"></i> Eliminar</a>';
 
   LINEA;
 
@@ -123,6 +124,4 @@
 
     ?>
 
-  </body>
-
-</html>
+<?php include 'partes/pie.php'; ?>

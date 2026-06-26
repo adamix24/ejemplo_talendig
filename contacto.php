@@ -1,113 +1,108 @@
-<html>
-  <head>
-      <title>Agenda Final</title>
+<?php
+  $id = isset($_GET['id'])?$_GET['id']:'';
 
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  $posible = "datax/{$id}";
 
-      <style>
+  if(!is_file($posible)){
+     header("Location:./");
+     exit;
+  }
 
-        fieldset{
-          padding:10px;
-          border:solid 2px #cccccc;
-          margin-bottom: 5px;
+  $tmp = file_get_contents($posible);
 
-        }
-      </style>
-  </head>
+  $contacto = json_decode($tmp);
 
-  <body>
+  if($_POST){
 
+    $l = new stdClass();
 
-    <?php
-      $id = isset($_GET['id'])?$_GET['id']:'';
+    //obtener los Datos
+    $l->fecha = $_POST['fecha'];
+    $l->motivo = $_POST['motivo'];
+    $l->empleado = $_POST['empleado'];
 
+    if(!isset($contacto->llamadas)){
+      $contacto->llamadas = [];
+    }
 
-      $posible = "datax/{$id}";
+    $contacto->llamadas[] = $l;
 
-      if(!is_file($posible)){
-         header("Location:./");
-      }
+    $data = json_encode($contacto);
 
-      $tmp = file_get_contents($posible);
+    file_put_contents("datax/{$id}", $data);
 
-      $contacto = json_decode($tmp);
+    header("Location:/.");
+    exit;
+  }
 
-      if($_POST){
+  $titulo = 'Agenda · Llamadas de '.$contacto->nombre;
+  include 'partes/cabecera.php';
+?>
 
-        $l = new stdClass();
+    <div class="container my-4">
 
+        <div class="mb-4">
+          <a href="./" class="text-decoration-none small"><i class="fa fa-arrow-left me-1"></i> Volver a contactos</a>
+          <h1 class="page-title h3 mt-2">Llamadas a <?= htmlspecialchars($contacto->nombre); ?></h1>
+          <p class="page-subtitle">Registra una nueva llamada a este contacto</p>
+        </div>
 
-        //obtener los Datos
-        $l->fecha = $_POST['fecha'];
-        $l->motivo = $_POST['motivo'];
-        $l->empleado = $_POST['empleado'];
+        <div class="row g-4">
 
-        if(!isset($contacto->llamadas)){
-          $contacto->llamadas = [];
-        }
-
-        $contacto->llamadas[] = $l;
-
-        $data = json_encode($contacto);
-
-        file_put_contents("datax/{$id}", $data);
-
-        header("Location:/.");
-
-      }
-
-
-    ?>
-
-    <div class="container mt-3">
-
-        <h3>Llamadas al <?= $contacto->nombre; ?></h3>
-
-        <p>Aqui vamos a registrar la llama a este contacto</p>
-
-
-
-        <form method="post" action="<?= $_SERVER['REQUEST_URI']; ?>">
-          <div class="m-3"><input required type="date" name="fecha" class="form-control" ></div>
-          <div class="m-3"><textarea required class="form-control" name="motivo" placeholder="Para que llama??"></textarea></div>
-          <div class="m-3"><input required type="text" name="empleado" class="form-control" placeholder="QUien llama" ></div>
-
-            <div>
-                <a href="./">Volver</a>
+          <div class="col-lg-5">
+            <div class="app-card">
+              <h2 class="h6 text-uppercase text-muted mb-3"><i class="fa fa-phone-volume me-1"></i> Nueva llamada</h2>
+              <form method="post" action="<?= htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
+                <div class="mb-3">
+                  <label class="form-label-strong">Fecha</label>
+                  <input required type="date" name="fecha" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label-strong">Motivo</label>
+                  <textarea required class="form-control" name="motivo" rows="3" placeholder="¿Para qué llama?"></textarea>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label-strong">Empleado</label>
+                  <input required type="text" name="empleado" class="form-control" placeholder="¿Quién llama?">
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary btn-lg-soft">
+                    <i class="fa fa-floppy-disk me-1"></i> Guardar llamada
+                  </button>
+                </div>
+              </form>
             </div>
-            <div class="text-center">
+          </div>
 
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-
-        </form>
-
-        <div>
-            <h3>Historico de contacto</h3>
-
+          <div class="col-lg-7">
+            <h2 class="h6 text-uppercase text-muted mb-3"><i class="fa fa-clock-rotate-left me-1"></i> Histórico de contacto</h2>
             <?php
-              foreach($contacto->llamadas as $llamada){
+              if(isset($contacto->llamadas) && count($contacto->llamadas)){
+                foreach(array_reverse($contacto->llamadas) as $llamada){
 
-                echo <<<FILA
-                  <fieldset>
-                      <legend>{$llamada->fecha}</legend>
-                      <p>
-                          {$llamada->motivo}
-                      </p>
-                      <p class='text-end'>
-                        Hecho por {$llamada->empleado}
-                      </p>
-                  </fieldset>
+                  $fecha = htmlspecialchars($llamada->fecha);
+                  $motivo = htmlspecialchars($llamada->motivo);
+                  $empleado = htmlspecialchars($llamada->empleado);
+
+                  echo <<<FILA
+                    <div class="call-item">
+                        <span class="call-date"><i class="fa fa-calendar-day"></i> {$fecha}</span>
+                        <p class="call-reason">{$motivo}</p>
+                        <p class="call-author"><i class="fa fa-user me-1"></i> Hecho por {$empleado}</p>
+                    </div>
 FILA;
-
+                }
+              } else {
+                echo "<div class='app-card empty-state'>
+                  <div><i class='fa fa-phone-slash'></i></div>
+                  <p class='mb-0'>Todavía no hay llamadas registradas.</p>
+                </div>";
               }
-
-
             ?>
+          </div>
 
         </div>
 
     </div>
 
-  </body>
+<?php include 'partes/pie.php'; ?>

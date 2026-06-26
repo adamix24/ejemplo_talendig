@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -S 127.0.0.1:8765)",
+      "Bash(curl -s \"http://127.0.0.1:8765/index.php\")",
+      "Bash(curl -s \"http://127.0.0.1:8765/imprimir.php?id=data1.json\")",
+      "Bash(curl -s \"http://127.0.0.1:8765/contacto.php?id=data1.json\")",
+      "Bash(kill %1)",
+      "Read(//tmp/**)"
+    ]
+  }
+}

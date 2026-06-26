@@ -1,0 +1,307 @@
+/* ===========================================================
+   Agenda del Futuro — Tema visual compartido
+   =========================================================== */
+
+:root {
+  --shell-red: #DD1D21;
+  --shell-red-dark: #B31317;
+  --shell-yellow: #FBCE07;
+  --brand: #DD1D21;
+  --brand-dark: #B31317;
+  --brand-soft: #FFF6D8;
+  --ink: #1f2937;
+  --muted: #6b7280;
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --border: #e6e7eb;
+  --shadow: 0 10px 30px -12px rgba(31, 41, 55, .22);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background:
+    radial-gradient(1100px 480px at 100% -12%, #fff3c4 0%, transparent 55%),
+    radial-gradient(800px 460px at -10% 0%, #ffe1d6 0%, transparent 52%),
+    var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ---------- Navbar / marca Shell ---------- */
+.app-nav {
+  background: var(--shell-yellow);
+  border-bottom: 4px solid var(--shell-red);
+  box-shadow: 0 6px 20px -10px rgba(221, 29, 33, .45);
+}
+.app-nav .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  text-decoration: none;
+}
+.app-nav .brand .brand-text {
+  color: var(--shell-red);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.app-nav .brand small {
+  display: block;
+  color: var(--shell-red-dark);
+  font-weight: 500;
+  font-size: .72rem;
+  opacity: .85;
+  letter-spacing: .02em;
+  margin-top: 2px;
+}
+.brand-tag {
+  color: var(--shell-red-dark);
+  font-weight: 600;
+  font-size: .8rem;
+  background: rgba(255, 255, 255, .55);
+  border: 1px solid rgba(221, 29, 33, .25);
+  padding: .3rem .8rem;
+  border-radius: 999px;
+}
+.shell-pecten { filter: drop-shadow(0 2px 3px rgba(0,0,0,.15)); }
+.shell-wordmark {
+  color: var(--shell-red);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -.02em;
+}
+
+/* ---------- Tarjetas ---------- */
+.app-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+}
+.page-title {
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0;
+}
+.page-subtitle {
+  color: var(--muted);
+  margin: .15rem 0 0;
+  font-size: .95rem;
+}
+
+/* ---------- Tabla ---------- */
+.table {
+  --bs-table-bg: transparent;
+  margin: 0;
+  border-color: var(--border);
+}
+.table thead th {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-bottom: 0;
+  padding: .9rem 1rem;
+  white-space: nowrap;
+}
+.table tbody td {
+  vertical-align: middle;
+  padding: .85rem 1rem;
+  border-color: var(--border);
+}
+.table tbody tr { transition: background .15s ease; }
+.table tbody tr:hover { background: #f8fafc; }
+.contact-name { font-weight: 600; }
+
+/* Badge de llamadas */
+.calls-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 600;
+  font-size: .82rem;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.btn-lg-soft { padding: .6rem 1.2rem; }
+.btn-primary { background: var(--brand); border-color: var(--brand); }
+.btn-primary:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+}
+.actions { display: inline-flex; gap: .4rem; }
+
+/* ---------- Formularios ---------- */
+.form-label-strong { font-weight: 600; color: var(--ink); margin-bottom: .35rem; }
+.input-group-text {
+  background: var(--brand-soft);
+  border-color: var(--border);
+  color: var(--brand-dark);
+  font-weight: 600;
+  min-width: 130px;
+}
+.form-control, .form-select {
+  border-color: var(--border);
+  padding: .6rem .8rem;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 .2rem rgba(99, 102, 241, .15);
+}
+
+/* ---------- Historial de llamadas ---------- */
+.call-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-bottom: .8rem;
+  box-shadow: 0 4px 14px -10px rgba(30, 41, 59, .25);
+}
+.call-item .call-date {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+  font-size: .9rem;
+}
+.call-item .call-reason { margin: .5rem 0 .25rem; color: var(--ink); }
+.call-item .call-author { color: var(--muted); font-size: .85rem; margin: 0; }
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--muted);
+}
+.empty-state i { font-size: 2.2rem; color: #cbd5e1; margin-bottom: .6rem; }
+
+/* ===========================================================
+   Documento imprimible — membrete profesional
+   =========================================================== */
+.doc-sheet {
+  max-width: 820px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.doc-letterhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.6rem 2rem;
+  background: var(--shell-yellow);
+  border-bottom: 4px solid var(--shell-red);
+}
+.doc-letterhead .doc-brand {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.doc-letterhead .doc-company {
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--shell-red);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.doc-letterhead .doc-company small {
+  display: block;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--shell-red-dark);
+  letter-spacing: .03em;
+  margin-top: 3px;
+}
+.doc-meta { text-align: right; font-size: .8rem; color: var(--shell-red-dark); }
+.doc-meta strong { display: block; font-size: .95rem; }
+
+.doc-body { padding: 2rem; }
+.doc-title {
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--ink);
+  margin: 0 0 .25rem;
+}
+.doc-title-rule {
+  height: 3px;
+  width: 64px;
+  background: var(--shell-red);
+  border-radius: 2px;
+  margin-bottom: 1.4rem;
+}
+.section-label {
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 700;
+  color: var(--shell-red);
+  margin: 1.6rem 0 .8rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid var(--brand-soft);
+}
+
+/* Ficha de datos en dos columnas */
+.data-sheet {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-sheet th, .data-sheet td {
+  padding: .7rem .9rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.data-sheet th {
+  color: var(--muted);
+  font-weight: 600;
+  width: 220px;
+  background: #fafafa;
+}
+.data-sheet td { font-weight: 600; color: var(--ink); }
+
+.doc-footer {
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--border);
+  font-size: .72rem;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* ---------- Impresión ---------- */
+@media print {
+  @page { margin: 14mm; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { background: #fff; }
+  .app-nav, .no-print, footer { display: none !important; }
+  .doc-sheet { box-shadow: none; border: none; border-radius: 0; max-width: 100%; }
+  .call-item { break-inside: avoid; }
+}

@@ -1,116 +1,137 @@
-<html>
-  <head>
-      <title>Agenda Final</title>
+<?php
+  $id = isset($_GET['id'])?$_GET['id']:'';
 
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  $posible = "datax/{$id}";
 
-      <style>
+  if(!is_file($posible)){
+     header("Location:./");
+     exit;
+  }
 
-        fieldset{
-          padding:10px;
-          border:solid 2px #cccccc;
-          margin-bottom: 5px;
+  $tmp = file_get_contents($posible);
 
-        }
-      </style>
-  </head>
+  $contacto = json_decode($tmp);
 
-  <body>
+  if($_POST){
 
+    $l = new stdClass();
 
-    <?php
-      $id = isset($_GET['id'])?$_GET['id']:'';
+    //obtener los Datos
+    $l->fecha = $_POST['fecha'];
+    $l->motivo = $_POST['motivo'];
+    $l->empleado = $_POST['empleado'];
 
+    if(!isset($contacto->llamadas)){
+      $contacto->llamadas = [];
+    }
 
-      $posible = "datax/{$id}";
+    $contacto->llamadas[] = $l;
 
-      if(!is_file($posible)){
-         header("Location:./");
-      }
+    $data = json_encode($contacto);
 
-      $tmp = file_get_contents($posible);
+    file_put_contents("datax/{$id}", $data);
 
-      $contacto = json_decode($tmp);
+    header("Location:/.");
+    exit;
+  }
 
-      if($_POST){
+  $titulo = 'Ficha de '.$contacto->nombre;
+  include 'partes/cabecera.php';
 
-        $l = new stdClass();
+  // Etiquetas legibles para los campos
+  $etiquetas = [
+    'nombre' => 'Nombre',
+    'apellido' => 'Apellido',
+    'telefono' => 'Teléfono',
+    'tsangre' => 'Tipo de sangre',
+    'cedula' => 'Cédula',
+    'fnacimiento' => 'Fecha de nacimiento',
+    'codigo' => 'Código',
+  ];
+?>
 
+    <div class="container my-4">
 
-        //obtener los Datos
-        $l->fecha = $_POST['fecha'];
-        $l->motivo = $_POST['motivo'];
-        $l->empleado = $_POST['empleado'];
+      <div class="text-end mb-3 no-print">
+        <a href="index.php" class="btn btn-outline-secondary"><i class="fa fa-arrow-left me-1"></i> Volver</a>
+        <button class="btn btn-primary" onclick="window.print()"><i class="fa fa-print me-1"></i> Imprimir</button>
+      </div>
 
-        if(!isset($contacto->llamadas)){
-          $contacto->llamadas = [];
-        }
+      <div class="doc-sheet">
 
-        $contacto->llamadas[] = $l;
+        <header class="doc-letterhead">
+          <div class="doc-brand">
+            <?= shell_logo(56) ?>
+            <div class="doc-company">Shell
+              <small>Estación de servicio</small>
+            </div>
+          </div>
+          <div class="doc-meta">
+            <strong>Ficha de Contacto</strong>
+            Emitido: <?= date('d/m/Y') ?><br>
+            Ref: <?= htmlspecialchars($id) ?>
+          </div>
+        </header>
 
-        $data = json_encode($contacto);
+        <div class="doc-body">
 
-        file_put_contents("datax/{$id}", $data);
+          <h1 class="doc-title"><?= htmlspecialchars($contacto->nombre); ?> <?= htmlspecialchars(isset($contacto->apellido) ? $contacto->apellido : ''); ?></h1>
+          <div class="doc-title-rule"></div>
 
-        header("Location:/.");
-
-      }
-
-
-    ?>
-
-    <div class="container mt-3">
-
-        <h3>Infomracion de <?= $contacto->nombre; ?></h3>
-
-
-          <table>
+          <div class="section-label">Datos personales</div>
+          <table class="data-sheet">
               <?php
                   foreach($contacto as $campo=>$valor){
 
-                    if($campo == 'llamadas'){
+                    if($campo == 'llamadas' || $campo == 'codigo'){
                       continue;
                     }
+                    $nombreCampo = isset($etiquetas[$campo]) ? $etiquetas[$campo] : ucfirst($campo);
+                    $valor = htmlspecialchars((string)$valor);
+                    if($valor === '') { $valor = '—'; }
                     echo "<tr>
-                        <th>{$campo}</th>
-                        <td>{$valor}<td>
+                        <th>{$nombreCampo}</th>
+                        <td>{$valor}</td>
                     </tr>";
-
                   }
-
               ?>
           </table>
 
-
-        <div>
-            <h3>Historico de contacto</h3>
-
-            <?php
+          <div class="section-label">Histórico de llamadas</div>
+          <?php
+            if(isset($contacto->llamadas) && count($contacto->llamadas)){
               foreach($contacto->llamadas as $llamada){
 
+                $fecha = htmlspecialchars($llamada->fecha);
+                $motivo = htmlspecialchars($llamada->motivo);
+                $empleado = htmlspecialchars($llamada->empleado);
+
                 echo <<<FILA
-                  <fieldset>
-                      <legend>{$llamada->fecha}</legend>
-                      <p>
-                          {$llamada->motivo}
-                      </p>
-                      <p class='text-end'>
-                        Hecho por {$llamada->empleado}
-                      </p>
-                  </fieldset>
+                  <div class="call-item">
+                      <span class="call-date"><i class="fa fa-calendar-day"></i> {$fecha}</span>
+                      <p class="call-reason">{$motivo}</p>
+                      <p class="call-author">Atendido por {$empleado}</p>
+                  </div>
 FILA;
-
               }
-
-
-            ?>
+            } else {
+              echo "<p class='text-muted'>Sin llamadas registradas.</p>";
+            }
+          ?>
 
         </div>
 
+        <footer class="doc-footer">
+          <span>Shell &middot; Documento generado automáticamente por la Agenda de Contactos</span>
+          <span>Confidencial</span>
+        </footer>
+
+      </div>
+
     </div>
+
     <script>
         window.print();
     </script>
 
-  </body>
+<?php include 'partes/pie.php'; ?>
