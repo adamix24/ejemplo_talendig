@@ -1,12 +1,12 @@
 <?php
 
- $id= $_GET['id'];
+require_once 'partes/db.php';
 
- $posible = "datax/{$id}";
+$id = isset($_GET['id']) ? $_GET['id'] : '';
 
- if(is_file($posible)){
-  
-   unlink($posible);
- }
+if($id !== ''){
+  contacto_borrar($id);
+}
 
- header("Location:./");
+header("Location:./");
+exit;

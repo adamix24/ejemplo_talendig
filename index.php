@@ -1,4 +1,8 @@
-<?php $titulo = 'Agenda del Futuro · Contactos'; include 'partes/cabecera.php'; ?>
+<?php
+  require_once 'partes/db.php';
+  $titulo = 'Agenda Shell · Contactos';
+  include 'partes/cabecera.php';
+?>
 
     <div class="container my-4">
 
@@ -27,43 +31,39 @@
               <tbody>
                 <?php
                   $hayContactos = false;
-                  if(is_dir("datax")){
-                    $archivos = scandir("datax");
+                  $contactos = contactos_todos();
 
-                    foreach($archivos as $nombre){
-                        $ruta = "datax/{$nombre}";
+                  foreach($contactos as $datos){
 
-                        if(is_file($ruta)){
+                      $id = (string) $datos->_id;
+                      $llamadas = (isset($datos->llamadas))?count($datos->llamadas):0;
+                      $hayContactos = true;
 
-                          $datos = file_get_contents($ruta);
-                          $datos = json_decode($datos);
+                      $nombre    = htmlspecialchars($datos->nombre ?? '');
+                      $apellido  = htmlspecialchars($datos->apellido ?? '');
+                      $telefono  = htmlspecialchars($datos->telefono ?? '');
 
-                          $llamadas = (isset($datos->llamadas))?count($datos->llamadas):0;
-                          $hayContactos = true;
+                    echo "<tr>
+                        <td class='contact-name'>{$nombre}</td>
+                        <td>{$apellido}</td>
+                        <td><i class='fa fa-phone-flip text-muted me-1'></i>
+                        <a href='tel:{$telefono}'>{$telefono}</a></td>
+                        <td><span class='calls-badge'><i class='fa fa-clock-rotate-left'></i>{$llamadas}</span></td>
+                          <td class='text-end'>
+                            <span class='actions'>
+                              <a class='btn btn-success btn-icon' title='Editar' href='edit_contacto.php?id={$id}'>
+                                <i class='fa fa-edit'></i>
+                              </a>
+                              <a href='contacto.php?id={$id}' class='btn btn-info btn-icon' title='Registrar llamada'>
+                                <i class='fa fa-phone'></i>
+                              </a>
+                              <a href='imprimir.php?id={$id}' target='ifPrint' class='btn btn-warning btn-icon' title='Imprimir'>
+                                <i class='fa fa-print'></i>
+                              </a>
+                            </span>
+                          </td>
+                        </tr>";
 
-                      echo "<tr>
-                          <td class='contact-name'>{$datos->nombre}</td>
-                          <td>{$datos->apellido}</td>
-                          <td><i class='fa fa-phone-flip text-muted me-1'></i>
-                          <a href='tel:{$datos->telefono}'>{$datos->telefono}</a></td>
-                          <td><span class='calls-badge'><i class='fa fa-clock-rotate-left'></i>{$llamadas}</span></td>
-                            <td class='text-end'>
-                              <span class='actions'>
-                                <a class='btn btn-success btn-icon' title='Editar' href='edit_contacto.php?id={$nombre}'>
-                                  <i class='fa fa-edit'></i>
-                                </a>
-                                <a href='contacto.php?id={$nombre}' class='btn btn-info btn-icon' title='Registrar llamada'>
-                                  <i class='fa fa-phone'></i>
-                                </a>
-                                <a href='imprimir.php?id={$nombre}' target='ifPrint' class='btn btn-warning btn-icon' title='Imprimir'>
-                                  <i class='fa fa-print'></i>
-                                </a>
-                              </span>
-                            </td>
-                          </tr>";
-
-                        }
-                    }
                   }
 
                   if(!$hayContactos){

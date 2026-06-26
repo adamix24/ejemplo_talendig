@@ -1,4 +1,8 @@
-<?php $titulo = 'Agenda · Datos del contacto'; include 'partes/cabecera.php'; ?>
+<?php
+  require_once 'partes/db.php';
+  $titulo = 'Agenda Shell · Datos del contacto';
+  include 'partes/cabecera.php';
+?>
 
     <div class="container my-4">
 
@@ -76,14 +80,10 @@
 
           $archivo = $_GET['id'];
 
-          $posible = "datax/{$archivo}";
+          $datos = contacto_obtener($archivo);
 
-          if(is_file($posible)){
+          if($datos){
 
-
-            $datos = file_get_contents($posible);
-
-            $datos = json_decode($datos);
 
             echo <<<LINEA
 
@@ -97,7 +97,7 @@
 
             foreach($datos as $campo=>$valor){
 
-              if($campo !== 'llamadas'){
+              if($campo !== 'llamadas' && $campo !== '_id'){
 
                 $valor = addslashes($valor);
                 echo "aplicarValor('{$campo}','{$valor}'); ";

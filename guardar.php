@@ -1,48 +1,24 @@
 <?php
 
+require_once 'partes/db.php';
 
 if($_POST){
 
-  if(!is_dir('datax')){
-      mkdir('datax');
-  }
+  // El campo "codigo" es de control: vacío = nuevo, con valor = id existente.
+  $codigo = isset($_POST['codigo']) ? trim($_POST['codigo']) : '';
 
-
+  // Campos del contacto (todo lo que viene del formulario salvo el control).
   $datos = $_POST;
+  unset($datos['codigo']);
 
-
-
-  $tmp = scandir("datax");
-
-  $n = count($tmp) - 2;
-
-  $ruta = "datax/data{$n}.json";
-
-  if(isset($_POST['codigo']) && strlen($_POST['codigo']) > 3){
-    $ruta = "datax/{$_POST['codigo']}";
-
-    if(is_file($ruta)){
-
-      $viejotxt = file_get_contents($ruta);
-      $viejo = json_decode($viejotxt);
-
-      foreach($viejo as $campo=>$valor){
-
-          if(!isset($datos[$campo])){
-            $datos[$campo] = $valor;
-          }
-      }
-
-    }
-
+  if($codigo !== '' && contacto_obtener($codigo)){
+    // Actualiza el contacto existente (las llamadas se conservan).
+    contacto_actualizar($codigo, $datos);
+  }else{
+    // Crea un contacto nuevo.
+    contacto_insertar($datos);
   }
-
-
-
-  $datos = json_encode($datos);
-  file_put_contents($ruta, $datos);
-
 
   header("Location: index.php");
-
+  exit;
 }

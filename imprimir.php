@@ -1,38 +1,13 @@
 <?php
+  require_once 'partes/db.php';
+
   $id = isset($_GET['id'])?$_GET['id']:'';
 
-  $posible = "datax/{$id}";
+  $contacto = contacto_obtener($id);
 
-  if(!is_file($posible)){
+  if(!$contacto){
      header("Location:./");
      exit;
-  }
-
-  $tmp = file_get_contents($posible);
-
-  $contacto = json_decode($tmp);
-
-  if($_POST){
-
-    $l = new stdClass();
-
-    //obtener los Datos
-    $l->fecha = $_POST['fecha'];
-    $l->motivo = $_POST['motivo'];
-    $l->empleado = $_POST['empleado'];
-
-    if(!isset($contacto->llamadas)){
-      $contacto->llamadas = [];
-    }
-
-    $contacto->llamadas[] = $l;
-
-    $data = json_encode($contacto);
-
-    file_put_contents("datax/{$id}", $data);
-
-    header("Location:/.");
-    exit;
   }
 
   $titulo = 'Ficha de '.$contacto->nombre;
@@ -83,7 +58,7 @@
               <?php
                   foreach($contacto as $campo=>$valor){
 
-                    if($campo == 'llamadas' || $campo == 'codigo'){
+                    if($campo == 'llamadas' || $campo == 'codigo' || $campo == '_id'){
                       continue;
                     }
                     $nombreCampo = isset($etiquetas[$campo]) ? $etiquetas[$campo] : ucfirst($campo);
